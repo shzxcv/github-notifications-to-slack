@@ -17,10 +17,10 @@ import (
 )
 
 type Env struct {
-	GithubToken        string `envconfig:"GITHUB_TOKEN" required:"true"`
-	SlackBotOauthToken string `envconfig:"SLACK_BOT_OAUTH_TOKEN" required:"true"`
-	SlackChannel       string `envconfig:"SLACK_CHANNEL" required:"false"`
-	SlackUserID        string `envconfig:"SLACK_USER_ID" required:"false"`
+	NotificationGithubToken string `envconfig:"NOTIFICATION_GITHUB_TOKEN" required:"true"`
+	SlackBotOauthToken      string `envconfig:"SLACK_BOT_OAUTH_TOKEN" required:"true"`
+	SlackChannel            string `envconfig:"SLACK_CHANNEL" required:"false"`
+	SlackUserID             string `envconfig:"SLACK_USER_ID" required:"false"`
 }
 
 type Notification struct {
@@ -58,7 +58,7 @@ func main() {
 
 func notifications(e *Env) ([]Notification, error) {
 	ctx := context.Background()
-	ts := oauth2.StaticTokenSource(&oauth2.Token{AccessToken: e.GithubToken})
+	ts := oauth2.StaticTokenSource(&oauth2.Token{AccessToken: e.NotificationGithubToken})
 	tc := oauth2.NewClient(ctx, ts)
 	client := github.NewClient(tc)
 	ns, _, err := client.Activity.ListNotifications(ctx, nil)
@@ -90,7 +90,7 @@ func notifications(e *Env) ([]Notification, error) {
 
 func request(url, types string, e *Env) (string, error) {
 	req, _ := http.NewRequest(http.MethodGet, url, nil)
-	req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", e.GithubToken))
+	req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", e.NotificationGithubToken))
 	client := new(http.Client)
 	resp, err := client.Do(req)
 	if err != nil {
