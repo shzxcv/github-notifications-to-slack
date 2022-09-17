@@ -1,7 +1,7 @@
-#!/bin/sh -l
+#!/bin/bash
 
-# echo "Hello $1"
-# time=$(date)
-# echo "::set-output name=time::$time"
-
+export GITHUB_TOKEN=${GITHUB_TOKEN}
+export SLACK_BOT_OAUTH_TOKEN=${SLACK_BOT_OAUTH_TOKEN}
+export SLACK_CHANNEL=${SLACK_CHANNEL}
+export SLACK_USER_ID=${SLACK_USER_ID}
 ./slack-notifier-actions
