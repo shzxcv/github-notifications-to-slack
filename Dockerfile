@@ -1,6 +1,6 @@
 FROM golang:1.19.1-alpine3.16@sha256:ca4f0513119dfbdc65ae7b76b69688f0723ed00d9ecf9de68abbf6ed01ef11bf as builder
 WORKDIR /builder
-COPY *.go .
+COPY . .
 ENV CGO_ENABLED 0
 ENV GOOS linux
 RUN go build -o slack-notifier-actions main.go && chmod +x ./slack-notifier-actions
