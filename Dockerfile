@@ -8,5 +8,5 @@ RUN go build -o slack-notifier-actions main.go && chmod +x ./slack-notifier-acti
 FROM alpine:3.16@sha256:1304f174557314a7ed9eddb4eab12fed12cb0cd9809e4c28f29af86979a3c870
 WORKDIR /slack
 COPY --from=builder /builder/slack-notifier-actions .
-COPY entrypoint.sh /entrypoint.sh
-ENTRYPOINT ["/entrypoint.sh"]
+COPY entrypoint.sh .
+ENTRYPOINT ["./entrypoint.sh"]
