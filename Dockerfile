@@ -9,4 +9,5 @@ FROM alpine:3.16@sha256:1304f174557314a7ed9eddb4eab12fed12cb0cd9809e4c28f29af869
 WORKDIR /work
 COPY --from=builder /builder/slack-notifier-actions .
 COPY entrypoint.sh .
+RUN chmod +x ./entrypoint.sh
 ENTRYPOINT ["./entrypoint.sh"]
