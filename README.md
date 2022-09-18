@@ -13,9 +13,9 @@ You can register a white list and black list of repositories to be notified.
 
 1. Need to create a slack bot. Access **[Slack Applications](https://api.slack.com/apps)**.
 2. **[Create new app]** -> **[From scratch]**
-3. **[OAuth & Permissions]** -> Add **chat:write** to Bot Token Scopes and re install.
+3. **[OAuth & Permissions]** -> Add **chat:write** to **Bot Token Scopes** and re install.
 4. Create a github token. Access **[Personal access tokens](https://github.com/settings/tokens)**, Tokens require the score of **repo**, **notifications**.
-5. Create a repository to run scheduled notifications and create the following Actions.
+5. Create a repository to run scheduled notifications github actions and create the following Actions.
 
 **.github/workflows/slack-notify.yml**
 ```
@@ -30,14 +30,14 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: Github Notifications To Slack
-        uses: actions/github-notifications-to-slack@v0.1
+        uses: actions/github-notifications-to-slack@v1
         env:
           NOTIFICATION_GITHUB_TOKEN: ${{ secrets.NOTIFICATION_GITHUB_TOKEN }}
           SLACK_BOT_OAUTH_TOKEN: ${{ secrets.SLACK_BOT_OAUTH_TOKEN }}
           SLACK_USER_ID: ${{ secrets.SLACK_USER_ID }}
 ```
 
-6. Register environment variables in the Secrets repository.
+6. Register environment variables in the **Actions secrets**.
 
 ## Environment Variables
 
