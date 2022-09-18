@@ -38,3 +38,14 @@ jobs:
 ```
 
 6. Register environment variables in the Secrets repository.
+
+## Environment Variables
+
+| Variable                  | Required | Purpose                                                                                                                                                                                                       | 
+| ------------------------- | -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | 
+| **NOTIFICATION_GITHUB_TOKEN** | **true**     | The token of the github account. repo and notifications scopes are required.                                                                                                                                  | 
+| **SLACK_BOT_OAUTH_TOKEN**     | **true**     | bot token for the slack app to be notified. chat:write is required.                                                                                                                                           | 
+| SLACK_CHANNEL             | false    | Specify the slack channel to be notified. (#test-channel)<br><br>* Either SLACK_CHANNEL or SLACK_USER_ID is required.                                                                                         | 
+| SLACK_USER_ID             | false    | The user id of the slack user to whom the Direct Message will be sent.(U01ABCD23EF)<br><br>* Either SLACK_CHANNEL or SLACK_USER_ID is required.                                                               | 
+| INCLUDE_GITHUB_REPOS      | false    | Repository to be included in the notification. (shzxcv/repo1,shzxcv/repo2)<br><br>* If the same repository is registered in INCLUDE_GITHUB_REPOS and EXCLUDE_GITHUB_REPOS, INCLUDE_GITHUB_REPOS has priority. | 
+| EXCLUDE_GITHUB_REPOS      | false    | Repository to exclude notifications. (shzxcv/repo1,shzxcv/repo2)                                                                                                                                              | 
