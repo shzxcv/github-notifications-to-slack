@@ -49,3 +49,7 @@ jobs:
 | SLACK_USER_ID             | false    | The user id of the slack user to whom the Direct Message will be sent.(U01ABCD23EF)<br><br>* Either SLACK_CHANNEL or SLACK_USER_ID is required.                                                               | 
 | INCLUDE_GITHUB_REPOS      | false    | Repository to be included in the notification. (shzxcv/repo1,shzxcv/repo2)<br><br>* If the same repository is registered in INCLUDE_GITHUB_REPOS and EXCLUDE_GITHUB_REPOS, INCLUDE_GITHUB_REPOS has priority. | 
 | EXCLUDE_GITHUB_REPOS      | false    | Repository to exclude notifications. (shzxcv/repo1,shzxcv/repo2)                                                                                                                                              | 
+
+## License
+
+[MIT](https://github.com/shzxcv/github-notifications-to-slack/blob/main/LICENSE)
