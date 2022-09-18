@@ -30,7 +30,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: Github Notifications To Slack
-        uses: actions/github-notifications-to-slack@v1
+        uses: shzxcv/github-notifications-to-slack@v1
         env:
           NOTIFICATION_GITHUB_TOKEN: ${{ secrets.NOTIFICATION_GITHUB_TOKEN }}
           SLACK_BOT_OAUTH_TOKEN: ${{ secrets.SLACK_BOT_OAUTH_TOKEN }}
