@@ -17,15 +17,18 @@ import (
 )
 
 type Env struct {
-	NotificationGithubToken string `envconfig:"NOTIFICATION_GITHUB_TOKEN" required:"true"`
-	SlackBotOauthToken      string `envconfig:"SLACK_BOT_OAUTH_TOKEN" required:"true"`
-	SlackChannel            string `envconfig:"SLACK_CHANNEL" required:"false"`
-	SlackUserID             string `envconfig:"SLACK_USER_ID" required:"false"`
+	NotificationGithubToken string   `envconfig:"NOTIFICATION_GITHUB_TOKEN" required:"true"`
+	SlackBotOauthToken      string   `envconfig:"SLACK_BOT_OAUTH_TOKEN" required:"true"`
+	SlackChannel            string   `envconfig:"SLACK_CHANNEL" required:"false"`
+	SlackUserID             string   `envconfig:"SLACK_USER_ID" required:"false"`
+	IncludeGithubRepos      []string `envconfig:"INCLUDE_GITHUB_REPOS" required:"false"`
+	ExcludeGithubRepos      []string `envconfig:"EXCLUDE_GITHUB_REPOS" required:"false"`
 }
 
 type Notification struct {
 	Reason string
 	URL    string
+	Title  string
 }
 
 func (e *Env) NewEnv() {
@@ -73,12 +76,27 @@ func notifications(e *Env) ([]Notification, error) {
 		go func(n *github.Notification) error {
 			r := n.GetReason()
 			s := n.GetSubject()
-			url, err := request(s.GetURL(), s.GetType(), e)
+			t := s.GetTitle()
+			repo := n.GetRepository().GetFullName()
+			fmt.Println(repo)
+			fmt.Println(repoValidator(e.IncludeGithubRepos, e.ExcludeGithubRepos, repo))
+			if !repoValidator(e.IncludeGithubRepos, e.ExcludeGithubRepos, repo) {
+				wg.Done()
+				return nil
+			}
+			var reqURL string
+			if s.GetLatestCommentURL() != "" && (r == "mention" || r == "comment") {
+				reqURL = s.GetLatestCommentURL()
+			} else {
+				reqURL = s.GetURL()
+			}
+			url, err := request(reqURL, e)
 			if err != nil {
+				wg.Done()
 				return err
 			}
 			mutex.Lock()
-			result = append(result, Notification{Reason: r, URL: url})
+			result = append(result, Notification{Reason: r, URL: url, Title: t})
 			mutex.Unlock()
 			wg.Done()
 			return nil
@@ -88,7 +106,44 @@ func notifications(e *Env) ([]Notification, error) {
 	return result, nil
 }
 
-func request(url, types string, e *Env) (string, error) {
+func repoValidator(includes, excludes []string, repo string) bool {
+	// both empty
+	if len(includes) == 0 && len(excludes) == 0 {
+		return true
+	}
+	// only includes
+	if len(includes) > 0 && len(excludes) == 0 {
+		for _, i := range includes {
+			if i == repo {
+				return true
+			}
+		}
+		return false
+	}
+	// only excludes
+	if len(includes) == 0 && len(excludes) > 0 {
+		for _, e := range excludes {
+			if e == repo {
+				return false
+			}
+		}
+		return true
+	}
+	// both are present, includes has priority
+	for _, i := range includes {
+		if i == repo {
+			return true
+		}
+	}
+	for _, e := range excludes {
+		if e == repo {
+			return false
+		}
+	}
+	return false
+}
+
+func request(url string, e *Env) (string, error) {
 	req, _ := http.NewRequest(http.MethodGet, url, nil)
 	req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", e.NotificationGithubToken))
 	client := new(http.Client)
@@ -105,17 +160,12 @@ func request(url, types string, e *Env) (string, error) {
 	if err = json.Unmarshal(body, &mapBody); err != nil {
 		return "", err
 	}
-	var resultURL string
-	if types == "PullRequest" {
-		resultURL = mapBody.(map[string]interface{})["_links"].(map[string]interface{})["html"].(map[string]interface{})["href"].(string)
-	} else if types == "Issue" {
-		resultURL = mapBody.(map[string]interface{})["html_url"].(string)
-	}
+	resultURL := mapBody.(map[string]interface{})["html_url"].(string)
 	return resultURL, nil
 }
 
 func newBlock(n *Notification) *slack.MsgOption {
-	text := fmt.Sprintf("*Notification [%s]*\n%s", n.Reason, n.URL)
+	text := fmt.Sprintf(":bell: *%s Notification*\n<%s|%s>", n.Reason, n.URL, n.Title)
 	block := slack.MsgOptionBlocks(
 		&slack.SectionBlock{
 			Type: slack.MBTSection,
