@@ -1,4 +1,4 @@
-IMAGENAME=slack-notifier-actions
+IMAGENAME=github-notifications-to-slack
 
 .PHONY: debug
 debug:

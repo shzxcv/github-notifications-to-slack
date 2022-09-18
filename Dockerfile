@@ -3,10 +3,10 @@ WORKDIR /builder
 COPY . .
 ENV CGO_ENABLED 0
 ENV GOOS linux
-RUN go build -o slack-notifier-actions main.go && chmod +x ./slack-notifier-actions
+RUN go build -o github-notifications-to-slack main.go && chmod +x ./github-notifications-to-slack
 
 FROM alpine:3.16@sha256:1304f174557314a7ed9eddb4eab12fed12cb0cd9809e4c28f29af86979a3c870
-COPY --from=builder /builder/slack-notifier-actions /usr/bin/slack-notifier-actions
+COPY --from=builder /builder/github-notifications-to-slack /usr/bin/github-notifications-to-slack
 COPY entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 ENTRYPOINT ["/entrypoint.sh"]

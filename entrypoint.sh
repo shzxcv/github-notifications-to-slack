@@ -7,4 +7,4 @@ export SLACK_USER_ID=${SLACK_USER_ID}
 export INCLUDE_GITHUB_REPOS=${INCLUDE_GITHUB_REPOS}
 export EXCLUDE_GITHUB_REPOS=${EXCLUDE_GITHUB_REPOS}
 
-slack-notifier-actions
+github-notifications-to-slack

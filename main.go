@@ -78,8 +78,6 @@ func notifications(e *Env) ([]Notification, error) {
 			s := n.GetSubject()
 			t := s.GetTitle()
 			repo := n.GetRepository().GetFullName()
-			fmt.Println(repo)
-			fmt.Println(repoValidator(e.IncludeGithubRepos, e.ExcludeGithubRepos, repo))
 			if !repoValidator(e.IncludeGithubRepos, e.ExcludeGithubRepos, repo) {
 				wg.Done()
 				return nil

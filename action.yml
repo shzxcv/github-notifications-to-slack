@@ -1,4 +1,4 @@
-name: 'Slack Notifier Actions'
+name: 'Github Notifications To Slack'
 description: 'your github notifications to slack, notifications customizer'
 author: 'shzxcv'
 runs:

@@ -1,4 +1,4 @@
-module github.com/shzxcv/slack-notifier-actions
+module github.com/shzxcv/github-notifications-to-slack
 
 go 1.19
 

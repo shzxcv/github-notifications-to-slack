@@ -1,1 +1,1 @@
-# slack-notifier-actions
+# Github Notifications To Slack
